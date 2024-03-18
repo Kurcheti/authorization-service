@@ -1,4 +1,4 @@
-package com.ecom.product.service;
+package com.ecom.service;
 
 import java.awt.print.Pageable;
 import java.io.IOException;
@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ecom.product.repository.UserRepo;
-import com.ecom.product.util.FileUtils;
+import com.ecom.exception.UserServiceException;
+import com.ecom.repository.UserRepo;
 import com.ecom.user.entity.User;
+import com.ecom.util.FileUtils;
 
 @Service
 public class UserService {
@@ -29,7 +30,7 @@ public class UserService {
 	
 	public User updateUser(User user, MultipartFile multipartFile) throws IOException {
 		userRepo.findById(user.getUserId()).orElseThrow(
-				()->new RuntimeException("User not found with "+user.getUserId()));
+				()->new UserServiceException("User not found with "+user.getUserId(),"USER_NOT_FOUND"));
 		 String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 		 String fileCode = FileUtils.saveFile(fileName, multipartFile,"user_img");
 		 user.setUserpic(fileCode+"-"+fileName);
@@ -37,7 +38,9 @@ public class UserService {
 	}
 	
 	public User getUserById(Integer userId) {
-		return userRepo.findById(userId).get();
+		User user = userRepo.findById(userId).orElseThrow(
+				()->new UserServiceException("User not found with "+userId,"USER_NOT_FOUND"));
+		return user;
 	}
 	
 	public Page<User> getCategories(User product,Pageable pageable){

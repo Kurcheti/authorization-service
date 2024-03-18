@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ecom.product.service.UserService;
+import com.ecom.service.UserService;
 import com.ecom.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
